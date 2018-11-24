@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { action, observable, runInAction } from 'mobx';
+import { history } from '../App';
 
 class AppState {
   hnBaseApi = 'https://hacker-news.firebaseio.com/v0';
@@ -10,6 +11,18 @@ class AppState {
 
   @observable
   stories: Story[] = [];
+
+  @observable
+  story: Story = {} as Story;
+
+  @action
+  getStory(storyId: string) {
+    const id = parseInt(storyId);
+    if (isNaN(id)) history.push('/notfound');
+    const story = this.stories.find(story => story.id === id);
+    if (!story) history.push('/notfound');
+    else this.story = story;
+  }
 
   @action
   async getStories(useCache = false) {

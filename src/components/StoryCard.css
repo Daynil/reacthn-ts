@@ -8,6 +8,10 @@
   width: 5px;
 }
 
+.hot {
+  background-color: hsl(0, 50%, 50%);
+}
+
 .score {
   display: flex;
   align-items: center;

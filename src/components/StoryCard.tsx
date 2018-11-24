@@ -5,42 +5,22 @@ import {
   IconButton,
   Typography
 } from '@material-ui/core';
-import { sanitize } from 'dompurify';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Story } from '../store/AppState';
-import {
-  getAge,
-  getCommentCount,
-  getHeatIndex,
-  parseDomain
-} from '../util/util';
+import { getAge, getCommentCount, getIsHot, parseDomain } from '../util/util';
 import './StoryCard.css';
 
 @observer
 export class StoryCard extends Component<{ story: Story }> {
-  getSanitizedMarkup(dirtyString: string) {
-    return {
-      __html: sanitize(dirtyString)
-    };
-  }
-
-  getStoryText(text: string) {
-    return text ? (
-      <span>
-        <span dangerouslySetInnerHTML={this.getSanitizedMarkup(text)} />
-      </span>
-    ) : null;
-  }
-
   render() {
     const { story } = this.props;
     if (!story) return null;
     return (
       <Card className="card">
-        <div className="heat-index" style={getHeatIndex(story)} />
-        <CardContent className={!false ? 'score' : 'score comments'}>
+        <div className={getIsHot(story) ? 'heat-index hot' : 'heat-index'} />
+        <CardContent className="score">
           <Typography variant="headline">{story.points}</Typography>
         </CardContent>
         <CardContent className="middle">
@@ -54,13 +34,13 @@ export class StoryCard extends Component<{ story: Story }> {
                 story.title
               )}
             </Typography>
-            <Typography variant="subheading" color="secondary">
+            <Typography variant="subheading" color="textSecondary">
               {parseDomain(story.url)}
             </Typography>
           </div>
           <Typography
             variant="subheading"
-            color="secondary"
+            color="textSecondary"
             className="extra-info"
           >
             by{' '}
@@ -73,11 +53,6 @@ export class StoryCard extends Component<{ story: Story }> {
             </a>{' '}
             {getAge(story.created_at)}
           </Typography>
-          {/* {story.children &&
-        <Typography>
-          {this.getStoryText(story.text)}
-        </Typography>
-        } */}
         </CardContent>
         <div className="spacer" />
         <CardContent>

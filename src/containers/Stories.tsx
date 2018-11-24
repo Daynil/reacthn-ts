@@ -2,7 +2,6 @@ import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { StoryCard } from '../components/StoryCard';
 import { appState } from '../store/AppState';
-import './Stories.css';
 
 @observer
 export class Stories extends Component {
@@ -17,6 +16,15 @@ export class Stories extends Component {
   }
 
   render() {
-    return <div className="stories">{this.storyList()}</div>;
+    return (
+      <div
+        style={{
+          width: '75%',
+          margin: '0 auto'
+        }}
+      >
+        {this.storyList()}
+      </div>
+    );
   }
 }

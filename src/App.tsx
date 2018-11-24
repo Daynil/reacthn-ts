@@ -1,22 +1,28 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import React from 'react';
+import { BrowserRouter, Route, Router, Switch } from 'react-router-dom';
 import './App.css';
 import { Navigation } from './components/Navigation';
+import { Comments } from './containers/Comments';
 import { Stories } from './containers/Stories';
 
-const Index = () => <h2>Home</h2>;
 const About = () => <h2>About</h2>;
-const Users = () => <h2>Users</h2>;
+const NotFound = () => <h2>404 Not Found!</h2>;
 
-export class App extends Component {
+export const history = createBrowserHistory();
+
+export class App extends BrowserRouter {
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <div>
           <Navigation />
-          <Route path="/" exact component={Stories} />
-          <Route path="/about/" component={About} />
-          <Route path="/users/" component={Users} />
+          <Switch>
+            <Route path="/" exact component={Stories} />
+            <Route path="/comment/:id" component={Comments} />
+            <Route path="/about/" component={About} />
+            <Route component={NotFound} />
+          </Switch>
         </div>
       </Router>
     );

@@ -3,7 +3,7 @@ import { Comment, Story } from '../store/AppState';
 
 export const getAge = (created: string) => {
   //2018-11-22T20:06:28.000Z
-  let createdOn = moment(created, 'YYYY-MM-DDTHH');
+  let createdOn = moment(created);
   return createdOn.fromNow();
 };
 
@@ -25,20 +25,22 @@ export const getCommentCount = (comments: Comment[]) => {
 
   if (comments.length > 0) {
     commentCount += comments.length;
-    comments.forEach(comment => {
+    for (const comment of comments) {
       commentCount += getCommentCount(comment.children);
-    });
+    }
   }
 
   return commentCount;
 };
 
-export const getHeatIndex = (story: Story) => {
-  const storyAge = moment(story.created_at);
-  let redAdjust = story.points / storyAge.minutes();
-  let redness = redAdjust > 50 ? 50 : redAdjust;
-  let heatIndex = 100 - redness;
-  return { backgroundColor: `hsl(0, 50%, ${heatIndex}%` };
+/**
+ * Determine if a story is 'hot' by number of points in a time period
+ * 20 points per hour can be considered 'hot'
+ */
+export const getIsHot = (story: Story) => {
+  const storyAgeHours = moment().diff(moment(story.created_at), 'hours');
+  let hotnessRatio = story.points / storyAgeHours;
+  return hotnessRatio >= 20;
 };
 
 // export const getStoryPath = (location) => {
