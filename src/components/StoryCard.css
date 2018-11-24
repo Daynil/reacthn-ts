@@ -1,0 +1,60 @@
+.card {
+  display: flex;
+  margin: 10px 0 10px 0;
+}
+
+.heat-index {
+  height: inherit;
+  width: 5px;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  width: 40px;
+}
+
+.comments {
+  display: flex;
+  align-items: flex-start;
+  width: 40px;
+}
+
+.author {
+  color: gray;
+}
+
+.middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.extra-info {
+  align-self: left;
+}
+
+.story-link {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.story-link:hover {
+  color: hsl(189, 100%, 50%);
+}
+
+spacer {
+  flex: '1 1 auto';
+}
+
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: inherit;
+}
+
+a.comment-button {
+  text-decoration: none;
+}
