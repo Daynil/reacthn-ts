@@ -42,17 +42,45 @@ const CommentWrap = (props: {
 };
 
 @observer
-export class Comments extends Component<RouteComponentProps<{ id: string }>> {
+export class Comments extends Component<
+  RouteComponentProps<{ id: string }>,
+  { commentChain: any[] }
+> {
+  constructor(props: RouteComponentProps<{ id: string }>) {
+    super(props);
+    this.state = {
+      commentChain: []
+    };
+  }
+
   componentDidMount() {
+    appState.setLoading(true);
     appState.selectStory(this.props.match.params.id);
   }
 
-  render() {
-    if (!appState.selectedStory || !appState.selectedStory.children)
-      return null;
-    const commentCardChain = appState.selectedStory.children.map(
+  /**
+   * Give component a moment to render page and story info prior to deep comment render
+   */
+  componentDidUpdate() {
+    if (this.state.commentChain.length) return;
+    if (!appState.selectedStory!.children.length) {
+      appState.setLoading(false);
+      return;
+    }
+    const commentCardChain = appState.selectedStory!.children.map(
       generateCommentChain(false, 0)
     );
+    setTimeout(
+      () =>
+        this.setState({ commentChain: commentCardChain }, () =>
+          appState.setLoading(false)
+        ),
+      10
+    );
+  }
+
+  render() {
+    if (!appState.selectedStory) return null;
 
     return (
       <div
@@ -62,7 +90,9 @@ export class Comments extends Component<RouteComponentProps<{ id: string }>> {
         }}
       >
         <StoryCard story={appState.selectedStory} />
-        <div style={{ padding: '0 10px 10px 10px' }}>{commentCardChain}</div>
+        <div style={{ padding: '0 10px 10px 10px' }}>
+          {this.state.commentChain}
+        </div>
       </div>
     );
   }

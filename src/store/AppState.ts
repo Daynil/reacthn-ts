@@ -30,6 +30,12 @@ class AppState {
   }
 
   @action
+  setLoading(loading: boolean) {
+    if ((this.isLoading = loading)) return;
+    this.isLoading = loading;
+  }
+
+  @action
   async getStories(useCache = false) {
     this.isLoading = true;
     if (useCache) {
