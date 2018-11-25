@@ -22,3 +22,8 @@
 a {
   color: hsl(0, 0%, 55%);
 }
+
+.comment-box {
+  border-bottom: 1px solid darkgray;
+  margin-top: 20px;
+}

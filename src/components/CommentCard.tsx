@@ -33,7 +33,7 @@ export class CommentCard extends Component<{
     const { comment, isHidden, level } = this.props;
     return comment.text && !isHidden ? (
       <div style={{ marginLeft: `${level * this.offsetFactor}px` }}>
-        <div>
+        <div className="comment-box">
           <span className="comment-title">
             <span>
               <a
@@ -44,7 +44,7 @@ export class CommentCard extends Component<{
                 {comment.author}
               </a>
             </span>
-            <span>{getAge(comment.created_at)}</span>
+            <span> {getAge(comment.created_at)}</span>
             {/* <span className="min-button">
             {!comment.minimized ?
               <span>[ - ]</span> :

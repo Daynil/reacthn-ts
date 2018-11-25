@@ -44,12 +44,13 @@ const CommentWrap = (props: {
 @observer
 export class Comments extends Component<RouteComponentProps<{ id: string }>> {
   componentDidMount() {
-    appState.getStory(this.props.match.params.id);
+    appState.selectStory(this.props.match.params.id);
   }
 
   render() {
-    if (!appState.story || !appState.story.children) return null;
-    const commentCardChain = appState.story.children.map(
+    if (!appState.selectedStory || !appState.selectedStory.children)
+      return null;
+    const commentCardChain = appState.selectedStory.children.map(
       generateCommentChain(false, 0)
     );
 
@@ -60,8 +61,8 @@ export class Comments extends Component<RouteComponentProps<{ id: string }>> {
           margin: '0 auto'
         }}
       >
-        <StoryCard story={appState.story} />
-        <div style={{ padding: '5px' }}>{commentCardChain}</div>
+        <StoryCard story={appState.selectedStory} />
+        <div style={{ padding: '0 10px 10px 10px' }}>{commentCardChain}</div>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { action, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { history } from '../App';
 
 class AppState {
@@ -13,15 +13,20 @@ class AppState {
   stories: Story[] = [];
 
   @observable
-  story: Story = {} as Story;
+  selectedStoryId = 0;
+
+  @computed
+  get selectedStory() {
+    return this.stories.find(story => story.id === this.selectedStoryId);
+  }
 
   @action
-  getStory(storyId: string) {
+  selectStory(storyId: string) {
     const id = parseInt(storyId);
     if (isNaN(id)) history.push('/notfound');
     const story = this.stories.find(story => story.id === id);
     if (!story) history.push('/notfound');
-    else this.story = story;
+    else this.selectedStoryId = id;
   }
 
   @action
