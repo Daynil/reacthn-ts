@@ -17,14 +17,14 @@ export class AppState {
 
   @computed
   get selectedStory() {
-    return this.stories.find(story => story.id === this.selectedStoryId);
+    return this.stories.find(story => story.base.id === this.selectedStoryId);
   }
 
   @action
   selectStory(storyId: string) {
     const id = parseInt(storyId);
     if (isNaN(id)) history.push('/notfound');
-    const story = this.stories.find(story => story.id === id);
+    const story = this.stories.find(story => story.base.id === id);
     if (!story) history.push('/notfound');
     else this.selectedStoryId = id;
   }
@@ -44,7 +44,9 @@ export class AppState {
       setTimeout(() => {
         runInAction(() => {
           this.isLoading = false;
-          this.stories = storiesCache;
+          this.stories = storiesCache.map((story: RawStory) => {
+            return new Story(story, story.children);
+          });
         });
       }, 1000);
     } else {
@@ -54,7 +56,7 @@ export class AppState {
       const topIds = topIdsRes.data.slice(0, 19);
       const stories = await Promise.all(
         topIds.map(async topId => {
-          const storyRes = await axios.get<Story>(
+          const storyRes = await axios.get<RawStory>(
             `${this.algoliaHnBaseApi}/items/${topId}`
           );
           return storyRes.data;
@@ -62,29 +64,69 @@ export class AppState {
       );
       runInAction(() => {
         this.isLoading = false;
-        this.stories = stories;
+        this.stories = stories.map(story => {
+          return new Story(story, story.children);
+        });
       });
     }
   }
 }
 
-export interface Story {
+export class Story {
+  base: BaseStory;
+  @observable children: Comment[] = [];
+
+  constructor(storyBase: RawStory, nestedComments: RawComment[]) {
+    const { children, ...baseStory } = storyBase;
+    this.base = baseStory;
+    for (const nestedComment of nestedComments) {
+      this.children.push(new Comment(nestedComment, nestedComment.children));
+    }
+  }
+}
+
+export class Comment {
+  base: BaseComment;
+  @observable minimized = false;
+  @observable children: Comment[] = [];
+
+  constructor(rawComment: RawComment, nestedComments: RawComment[]) {
+    const { children, ...baseComment } = rawComment;
+    this.base = baseComment;
+    for (const nestedComment of nestedComments) {
+      this.children.push(new Comment(nestedComment, nestedComment.children));
+    }
+  }
+
+  @action
+  toggleMinimized() {
+    this.minimized = !this.minimized;
+  }
+}
+
+export interface RawComment extends BaseComment {
+  children: RawComment[];
+}
+
+interface BaseComment {
+  id: number;
+  created_at: string;
+  author: string;
+  text: string;
+  points: number;
+}
+
+interface RawStory extends BaseStory {
+  children: RawComment[];
+}
+
+interface BaseStory {
   id: number;
   created_at: string;
   author: string;
   title: string;
   url: string;
   points: number;
-  children: Comment[];
-}
-
-export interface Comment {
-  id: number;
-  created_at: string;
-  author: string;
-  text: string;
-  points: number;
-  children: Comment[];
 }
 
 export interface User {

@@ -19,27 +19,25 @@ const generateCommentChain = (isHidden: boolean, levelOfRecursion: number) => {
 /**
  * Recursive wrapper component over CommentCard
  */
-const CommentWrap = (props: {
-  comment: Comment;
-  isHidden: boolean;
-  level: number;
-}) => {
-  const { comment, isHidden, level } = props;
-  let nestedComments;
-  if (comment.children.length > 0) {
-    const childLevel = level + 1;
-    const childrenHidden = isHidden;
-    nestedComments = comment.children.map(
-      generateCommentChain(childrenHidden, childLevel)
+const CommentWrap = observer(
+  (props: { comment: Comment; isHidden: boolean; level: number }) => {
+    const { comment, isHidden, level } = props;
+    let nestedComments;
+    if (comment.children.length > 0) {
+      const childLevel = level + 1;
+      const childrenHidden = isHidden || comment.minimized;
+      nestedComments = comment.children.map(
+        generateCommentChain(childrenHidden, childLevel)
+      );
+    }
+    return (
+      <div>
+        <CommentCard comment={comment} isHidden={isHidden} level={level} />
+        {nestedComments}
+      </div>
     );
   }
-  return (
-    <div>
-      <CommentCard comment={comment} isHidden={isHidden} level={level} />
-      {nestedComments}
-    </div>
-  );
-};
+);
 
 interface RouteAndState extends RouteComponentProps<{ id: string }> {
   appState: AppState;
@@ -49,7 +47,7 @@ interface RouteAndState extends RouteComponentProps<{ id: string }> {
 @observer
 export class Comments extends Component<
   RouteAndState,
-  { commentChain: any[] }
+  { commentChain: JSX.Element[] }
 > {
   constructor(props: RouteAndState) {
     super(props);

@@ -21,7 +21,7 @@ export const parseDomain = (url: string) => {
  */
 export const getCommentCount = (comments: Comment[]) => {
   let commentCount = 0;
-  comments = comments.filter(comment => comment.text);
+  comments = comments.filter(comment => comment.base.text);
 
   if (comments.length > 0) {
     commentCount += comments.length;
@@ -38,8 +38,8 @@ export const getCommentCount = (comments: Comment[]) => {
  * 20 points per hour can be considered 'hot'
  */
 export const getIsHot = (story: Story) => {
-  const storyAgeHours = moment().diff(moment(story.created_at), 'hours');
-  let hotnessRatio = story.points / storyAgeHours;
+  const storyAgeHours = moment().diff(moment(story.base.created_at), 'hours');
+  let hotnessRatio = story.base.points / storyAgeHours;
   return hotnessRatio >= 20;
 };
 
