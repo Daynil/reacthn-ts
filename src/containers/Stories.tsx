@@ -1,16 +1,17 @@
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { StoryCard } from '../components/StoryCard';
-import { appState } from '../store/AppState';
+import { AppState } from '../store/AppState';
 
+@inject('appState')
 @observer
-export class Stories extends Component {
+export class Stories extends Component<{ appState: AppState }> {
   componentDidMount() {
-    appState.getStories(true);
+    this.props.appState.getStories(true);
   }
 
   storyList() {
-    return appState.stories.map((story, i) => (
+    return this.props.appState.stories.map((story, i) => (
       <StoryCard key={i} story={story} />
     ));
   }

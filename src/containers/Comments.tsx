@@ -1,9 +1,9 @@
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { CommentCard } from '../components/CommentCard';
 import { StoryCard } from '../components/StoryCard';
-import { appState, Comment } from '../store/AppState';
+import { AppState, Comment } from '../store/AppState';
 
 const generateCommentChain = (isHidden: boolean, levelOfRecursion: number) => {
   return (comment: Comment, index: number) => (
@@ -41,12 +41,17 @@ const CommentWrap = (props: {
   );
 };
 
+interface RouteAndState extends RouteComponentProps<{ id: string }> {
+  appState: AppState;
+}
+
+@inject('appState')
 @observer
 export class Comments extends Component<
-  RouteComponentProps<{ id: string }>,
+  RouteAndState,
   { commentChain: any[] }
 > {
-  constructor(props: RouteComponentProps<{ id: string }>) {
+  constructor(props: RouteAndState) {
     super(props);
     this.state = {
       commentChain: []
@@ -54,33 +59,25 @@ export class Comments extends Component<
   }
 
   componentDidMount() {
-    appState.setLoading(true);
-    appState.selectStory(this.props.match.params.id);
-  }
+    this.props.appState.setLoading(true);
+    this.props.appState.selectStory(this.props.match.params.id);
 
-  /**
-   * Give component a moment to render page and story info prior to deep comment render
-   */
-  componentDidUpdate() {
-    if (this.state.commentChain.length) return;
-    if (!appState.selectedStory!.children.length) {
-      appState.setLoading(false);
-      return;
-    }
-    const commentCardChain = appState.selectedStory!.children.map(
+    const commentCardChain = this.props.appState.selectedStory!.children.map(
       generateCommentChain(false, 0)
     );
+
+    // Give component a moment to render initial page and story info prior to deep comment render
     setTimeout(
       () =>
         this.setState({ commentChain: commentCardChain }, () =>
-          appState.setLoading(false)
+          this.props.appState.setLoading(false)
         ),
-      10
+      1
     );
   }
 
   render() {
-    if (!appState.selectedStory) return null;
+    if (!this.props.appState.selectedStory) return null;
 
     return (
       <div
@@ -89,7 +86,7 @@ export class Comments extends Component<
           margin: '0 auto'
         }}
       >
-        <StoryCard story={appState.selectedStory} />
+        <StoryCard story={this.props.appState.selectedStory} />
         <div style={{ padding: '0 10px 10px 10px' }}>
           {this.state.commentChain}
         </div>

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { history } from '../App';
 
-class AppState {
+export class AppState {
   hnBaseApi = 'https://hacker-news.firebaseio.com/v0';
   algoliaHnBaseApi = 'http://hn.algolia.com/api/v1';
 
@@ -31,7 +31,7 @@ class AppState {
 
   @action
   setLoading(loading: boolean) {
-    if ((this.isLoading = loading)) return;
+    if (this.isLoading === loading) return;
     this.isLoading = loading;
   }
 
