@@ -1,17 +1,15 @@
 import { sanitize } from 'dompurify';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { AppState, Comment } from '../store/AppState';
+import { Comment } from '../store/AppState';
 import { getAge, getCommentCount } from '../util/util';
 import './CommentCard.css';
 
-@inject('appState')
 @observer
 export class CommentCard extends Component<{
   comment: Comment;
   isHidden: boolean;
   level: number;
-  appState?: AppState;
 }> {
   offsetFactor = 40;
 
