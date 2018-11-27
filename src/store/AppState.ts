@@ -45,7 +45,7 @@ export class AppState {
         runInAction(() => {
           this.isLoading = false;
           this.stories = storiesCache.map((story: RawStory) => {
-            return new Story(story, story.children);
+            return new Story(story);
           });
         });
       }, 1000);
@@ -65,7 +65,7 @@ export class AppState {
       runInAction(() => {
         this.isLoading = false;
         this.stories = stories.map(story => {
-          return new Story(story, story.children);
+          return new Story(story);
         });
       });
     }
@@ -76,11 +76,11 @@ export class Story {
   base: BaseStory;
   @observable children: Comment[] = [];
 
-  constructor(storyBase: RawStory, nestedComments: RawComment[]) {
+  constructor(storyBase: RawStory) {
     const { children, ...baseStory } = storyBase;
     this.base = baseStory;
-    for (const nestedComment of nestedComments) {
-      this.children.push(new Comment(nestedComment, nestedComment.children));
+    for (const nestedComment of children) {
+      this.children.push(new Comment(nestedComment));
     }
   }
 }
@@ -90,11 +90,11 @@ export class Comment {
   @observable minimized = false;
   @observable children: Comment[] = [];
 
-  constructor(rawComment: RawComment, nestedComments: RawComment[]) {
+  constructor(rawComment: RawComment) {
     const { children, ...baseComment } = rawComment;
     this.base = baseComment;
-    for (const nestedComment of nestedComments) {
-      this.children.push(new Comment(nestedComment, nestedComment.children));
+    for (const nestedComment of children) {
+      this.children.push(new Comment(nestedComment));
     }
   }
 
