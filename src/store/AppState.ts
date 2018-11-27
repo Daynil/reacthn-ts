@@ -72,12 +72,15 @@ export class AppState {
   }
 }
 
+/**
+ * Pluck comments recursively in order to add observable minimized field
+ */
 export class Story {
   base: BaseStory;
-  @observable children: Comment[] = [];
+  children: Comment[] = [];
 
-  constructor(storyBase: RawStory) {
-    const { children, ...baseStory } = storyBase;
+  constructor(rawStory: RawStory) {
+    const { children, ...baseStory } = rawStory;
     this.base = baseStory;
     for (const nestedComment of children) {
       this.children.push(new Comment(nestedComment));
@@ -88,7 +91,7 @@ export class Story {
 export class Comment {
   base: BaseComment;
   @observable minimized = false;
-  @observable children: Comment[] = [];
+  children: Comment[] = [];
 
   constructor(rawComment: RawComment) {
     const { children, ...baseComment } = rawComment;
@@ -104,7 +107,7 @@ export class Comment {
   }
 }
 
-export interface RawComment extends BaseComment {
+interface RawComment extends BaseComment {
   children: RawComment[];
 }
 

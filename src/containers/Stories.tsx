@@ -11,8 +11,8 @@ export class Stories extends Component<{ appState: AppState }> {
   }
 
   storyList() {
-    return this.props.appState.stories.map((story, i) => (
-      <StoryCard key={i} story={story} />
+    return this.props.appState.stories.map(story => (
+      <StoryCard key={story.base.id} story={story} />
     ));
   }
 

@@ -5,14 +5,12 @@ import {
   IconButton,
   Typography
 } from '@material-ui/core';
-import { observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Story } from '../store/AppState';
 import { getAge, getCommentCount, getIsHot, parseDomain } from '../util/util';
 import './StoryCard.css';
 
-@observer
 export class StoryCard extends Component<{ story: Story }> {
   render() {
     const story = this.props.story;

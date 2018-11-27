@@ -33,8 +33,7 @@ export class CommentCard extends Component<{
     return !minimized ? 'comment-box' : 'comment-box minimized';
   };
 
-  onMinimizeClick(e: React.MouseEvent<HTMLSpanElement>) {
-    console.log('just testing', e.target);
+  onMinimizeClick() {
     this.props.comment.toggleMinimized();
   }
 
@@ -59,7 +58,7 @@ export class CommentCard extends Component<{
               </a>
             </span>
             <span> {getAge(comment.base.created_at)}</span>
-            <span onClick={e => this.onMinimizeClick(e)} className="min-button">
+            <span onClick={e => this.onMinimizeClick()} className="min-button">
               {!comment.minimized ? (
                 <span>[ - ]</span>
               ) : (
