@@ -1,0 +1,15 @@
+.stories-wrap {
+  width: 75%;
+  margin: 20px auto;
+}
+
+.more-btn {
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.load-spinner {
+  width: 20px !important;
+  height: 20px !important;
+  margin-left: 10px;
+}

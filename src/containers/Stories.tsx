@@ -1,12 +1,20 @@
+import { Button, CircularProgress } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import { StoryCard } from '../components/StoryCard';
 import { AppState } from '../store/AppState';
+import './Stories.css';
 
 @inject('appState')
 @observer
 export class Stories extends Component<{ appState: AppState }> {
   componentDidMount() {
+    if (this.props.appState.stories.length) return;
+    this.props.appState.getStories(true);
+  }
+
+  getMoreStories() {
+    if (this.props.appState.isLoading) return;
     this.props.appState.getStories(true);
   }
 
@@ -17,14 +25,22 @@ export class Stories extends Component<{ appState: AppState }> {
   }
 
   render() {
+    const { appState } = this.props;
     return (
-      <div
-        style={{
-          width: '75%',
-          margin: '0 auto'
-        }}
-      >
+      <div className="stories-wrap">
         {this.storyList()}
+        {appState.loadedStoryIds !== null && (
+          <Button
+            className="more-btn"
+            color="secondary"
+            onClick={() => this.getMoreStories()}
+          >
+            Load more
+            {appState.isLoading && (
+              <CircularProgress className="load-spinner" color="secondary" />
+            )}
+          </Button>
+        )}
       </div>
     );
   }

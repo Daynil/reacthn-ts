@@ -60,6 +60,8 @@ export class Comments extends Component<
     this.props.appState.setLoading(true);
     this.props.appState.selectStory(this.props.match.params.id);
 
+    if (!this.props.appState.selectedStory) return;
+
     const commentCardChain = this.props.appState.selectedStory!.children.map(
       generateCommentChain(false, 0)
     );

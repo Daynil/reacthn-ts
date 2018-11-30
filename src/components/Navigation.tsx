@@ -11,7 +11,7 @@ export class Navigation extends Component {
   render() {
     return (
       <div>
-        <AppBar position="static">
+        <AppBar color="primary" position="static">
           <Toolbar>
             <Link
               to="/"

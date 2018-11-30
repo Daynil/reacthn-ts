@@ -1,3 +1,5 @@
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import { cyan, indigo } from '@material-ui/core/colors';
 import { createBrowserHistory } from 'history';
 import { Provider } from 'mobx-react';
 import React from 'react';
@@ -13,6 +15,12 @@ const About = () => <h2>About</h2>;
 const NotFound = () => <h2>404 Not Found!</h2>;
 
 export const history = createBrowserHistory();
+const theme = createMuiTheme({
+  palette: {
+    primary: indigo,
+    secondary: cyan
+  }
+});
 
 export class App extends BrowserRouter {
   render() {
@@ -20,7 +28,7 @@ export class App extends BrowserRouter {
       <Provider appState={appState}>
         <Router history={history}>
           <ScrollToTop>
-            <div>
+            <MuiThemeProvider theme={theme}>
               <Navigation />
               <Switch>
                 <Route path="/" exact component={Stories} />
@@ -28,7 +36,7 @@ export class App extends BrowserRouter {
                 <Route path="/about/" component={About} />
                 <Route component={NotFound} />
               </Switch>
-            </div>
+            </MuiThemeProvider>
           </ScrollToTop>
         </Router>
       </Provider>

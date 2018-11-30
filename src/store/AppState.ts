@@ -10,6 +10,9 @@ export class AppState {
   isLoading = false;
 
   @observable
+  loadedStoryIds: number[] | null = null;
+
+  @observable
   stories: Story[] = [];
 
   @observable
@@ -23,10 +26,15 @@ export class AppState {
   @action
   selectStory(storyId: string) {
     const id = parseInt(storyId);
-    if (isNaN(id)) history.push('/notfound');
+    if (isNaN(id)) {
+      history.push('/notfound');
+      this.isLoading = false;
+    }
     const story = this.stories.find(story => story.base.id === id);
-    if (!story) history.push('/notfound');
-    else this.selectedStoryId = id;
+    if (!story) {
+      history.push('/notfound');
+      this.isLoading = false;
+    } else this.selectedStoryId = id;
   }
 
   @action
@@ -38,6 +46,7 @@ export class AppState {
   @action
   async getStories(useCache = false) {
     this.isLoading = true;
+
     if (useCache) {
       console.log('Using cached results');
       const storiesCache = require('./StoriesCache.json');
@@ -47,26 +56,31 @@ export class AppState {
           this.stories = storiesCache.map((story: RawStory) => {
             return new Story(story);
           });
+          this.loadedStoryIds = this.stories.map(story => story.base.id);
         });
       }, 1000);
     } else {
-      const topIdsRes = await axios.get<number[]>(
-        `${this.hnBaseApi}/topstories.json`
-      );
-      const topIds = topIdsRes.data.slice(0, 19);
-      const stories = await Promise.all(
-        topIds.map(async topId => {
+      if (this.loadedStoryIds === null) {
+        const topIdsRes = await axios.get<number[]>(
+          `${this.hnBaseApi}/topstories.json`
+        );
+        this.loadedStoryIds = topIdsRes.data;
+      } else if (!this.loadedStoryIds.length) return;
+      const storyIdsToLoadNext = [...this.loadedStoryIds.splice(0, 20)];
+      const rawStories = await Promise.all(
+        storyIdsToLoadNext.map(async topId => {
           const storyRes = await axios.get<RawStory>(
             `${this.algoliaHnBaseApi}/items/${topId}`
           );
           return storyRes.data;
         })
       );
+      const stories = rawStories.map(story => {
+        return new Story(story);
+      });
       runInAction(() => {
         this.isLoading = false;
-        this.stories = stories.map(story => {
-          return new Story(story);
-        });
+        this.stories.push(...stories);
       });
     }
   }
