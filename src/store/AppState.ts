@@ -1,3 +1,5 @@
+import { createMuiTheme, PaletteType } from '@material-ui/core';
+import { cyan, indigo } from '@material-ui/core/colors';
 import axios from 'axios';
 import { action, computed, observable, runInAction } from 'mobx';
 import { history } from '../App';
@@ -18,9 +20,40 @@ export class AppState {
   @observable
   selectedStoryId = 0;
 
+  @observable
+  uiThemeType: PaletteType = 'light';
+
+  uiThemes = {
+    light: createMuiTheme({
+      palette: {
+        primary: indigo,
+        secondary: cyan,
+        type: 'light'
+      }
+    }),
+    dark: createMuiTheme({
+      palette: {
+        primary: indigo,
+        secondary: cyan,
+        type: 'dark'
+      }
+    })
+  };
+
   @computed
   get selectedStory() {
     return this.stories.find(story => story.base.id === this.selectedStoryId);
+  }
+
+  @computed
+  get uiTheme() {
+    return this.uiThemes[this.uiThemeType];
+  }
+
+  @action
+  switchTheme(lightsOn: boolean) {
+    if (lightsOn) this.uiThemeType = 'light';
+    else this.uiThemeType = 'dark';
   }
 
   @action

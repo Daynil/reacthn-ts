@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core';
 import { sanitize } from 'dompurify';
 import { observer } from 'mobx-react';
 import React, { Component } from 'react';
@@ -68,7 +69,9 @@ export class CommentCard extends Component<{
               )}
             </span>
           </span>
-          <span className="body">{this.getStoryText(comment)}</span>
+          <Typography className="story-text">
+            {this.getStoryText(comment)}
+          </Typography>
         </div>
       </div>
     ) : null;

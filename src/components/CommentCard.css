@@ -21,9 +21,18 @@
 
 a {
   color: hsl(0, 0%, 55%);
+  transition: all 0.2s;
+}
+
+a:hover {
+  color: hsl(189, 100%, 50%);
 }
 
 .comment-box {
   border-bottom: 1px solid darkgray;
   margin-top: 20px;
+}
+
+.story-text {
+  font-size: 1rem !important;
 }

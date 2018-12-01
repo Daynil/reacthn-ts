@@ -19,11 +19,11 @@ export class StoryCard extends Component<{ story: Story }> {
       <Card className="card">
         <div className={getIsHot(story) ? 'heat-index hot' : 'heat-index'} />
         <CardContent className="score">
-          <Typography variant="headline">{story.base.points}</Typography>
+          <Typography variant="h5">{story.base.points}</Typography>
         </CardContent>
         <CardContent className="middle">
           <div>
-            <Typography variant="headline">
+            <Typography variant="h5">
               {story.base.url ? (
                 <a href={story.base.url} target="_blank" className="story-link">
                   {story.base.title}
@@ -32,12 +32,12 @@ export class StoryCard extends Component<{ story: Story }> {
                 story.base.title
               )}
             </Typography>
-            <Typography variant="subheading" color="textSecondary">
+            <Typography variant="subtitle1" color="textSecondary">
               {parseDomain(story.base.url)}
             </Typography>
           </div>
           <Typography
-            variant="subheading"
+            variant="subtitle1"
             color="textSecondary"
             className="extra-info"
           >
@@ -60,7 +60,7 @@ export class StoryCard extends Component<{ story: Story }> {
                 <Icon color="primary">comment</Icon>
               </IconButton>
             </Link>
-            <Typography variant="subheading">
+            <Typography variant="subtitle1">
               {story.children ? getCommentCount(story.children) : 0}
             </Typography>
           </div>
