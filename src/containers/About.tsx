@@ -24,7 +24,7 @@ export class About extends Component {
           <b>Technologies used:</b>
         </Typography>
         <Typography variant="subtitle1">
-          <ul>
+          <ul style={{ margin: '0' }}>
             <li>React</li>
             <li>create-react-app</li>
             <li>React-router</li>
