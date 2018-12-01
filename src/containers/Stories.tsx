@@ -32,12 +32,17 @@ export class Stories extends Component<{ appState: AppState }> {
         {appState.loadedStoryIds !== null && (
           <Button
             className="more-btn"
-            color="secondary"
+            color={appState.uiThemeType === 'light' ? 'primary' : 'secondary'}
             onClick={() => this.getMoreStories()}
           >
             Load more
             {appState.isLoading && (
-              <CircularProgress className="load-spinner" color="secondary" />
+              <CircularProgress
+                className="load-spinner"
+                color={
+                  appState.uiThemeType === 'light' ? 'primary' : 'secondary'
+                }
+              />
             )}
           </Button>
         )}
