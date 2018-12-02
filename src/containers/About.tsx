@@ -20,7 +20,7 @@ export class About extends Component {
             Danny Libin
           </a>
         </Typography>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" style={{ marginTop: '30px' }}>
           <b>Technologies used:</b>
         </Typography>
         <Typography variant="subtitle1">

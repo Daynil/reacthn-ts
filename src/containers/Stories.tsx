@@ -10,12 +10,12 @@ import './Stories.css';
 export class Stories extends Component<{ appState: AppState }> {
   componentDidMount() {
     if (this.props.appState.stories.length) return;
-    this.props.appState.getStories(true);
+    this.props.appState.getStories(false);
   }
 
   getMoreStories() {
     if (this.props.appState.isLoading) return;
-    this.props.appState.getStories(true);
+    this.props.appState.getStories(false);
   }
 
   storyList() {
